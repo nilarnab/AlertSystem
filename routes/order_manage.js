@@ -170,26 +170,7 @@ router.post("/place_by_cart", async (req, res, next) => {
 
 
 })
-router.post('/getqnt/:order_id',async(req,res)=>{
-    let puid=req.params.order_id;
-    Orders.findOne({order_id:puid},
-        // {$set:{
-        //  valid:0
-         
-        // }},{new:true},
-        (err,data)=>{
-        if(err){
-           res.send("ERROR"); 
-        }
-         else{   if(data==null){
-                res.send("Nothing found")
-            }
-            else{
-                res.send(data)
-            }
-        }
-    })
-    })
+
 
 
 router.post("/place_by_item", async (req, res, next) => {
@@ -493,7 +474,26 @@ router.post('/getorders/:order_id',async(req,res)=>{
             //     })
             // }
     
-       
+//    router.post('/getqnt/:order_id',async(req,res)=>{
+//     let puid=req.params.order_id;
+//     Orders.findOne({order_id:puid},
+//         // {$set:{
+//         //  valid:0
+         
+//         // }},{new:true},
+//         (err,data)=>{
+//         if(err){
+//            res.send("ERROR"); 
+//         }
+//          else{   if(data==null){
+//                 res.send("Nothing found")
+//             }
+//             else{
+//                 res.send(data)
+//             }
+//         }
+//     })
+//     })    
         
 
 
