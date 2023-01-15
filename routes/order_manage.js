@@ -350,28 +350,31 @@ router.post('/get_orders', async (req, res, next) => {
 
     })
 })
-router.put('/updateStage/:user_id/:order_id',async(req,res)=>{
-  let uid=req.params.user_id;
-  let puid=req.params.order_id;
-  let updatestage=req.body.stage;
-  let updatevalid=req.body.valid;
-  OrderSets.findOneAndUpdate({user_id:uid,order_id:puid},
-    {$set:{
-     valid:updatevalid,
-     stage:updatestage
-    }},{new:true},
-    (err,data)=>{
-    if(err){
-       res.send("ERROR"); 
-    }
-     else{   if(data==null){
-            res.send("Nothing found")
-        }
-        else{
-            res.send(data)
-        }
-    }
-})
+router.put('/updateStage/:user_id/:order_id', async (req, res) => {
+    let uid = req.params.user_id;
+    let puid = req.params.order_id;
+    let updatestage = req.body.stage;
+    let updatevalid = req.body.valid;
+    OrderSets.findOneAndUpdate({ user_id: uid, order_id: puid },
+        {
+            $set: {
+                valid: updatevalid,
+                stage: updatestage
+            }
+        }, { new: true },
+        (err, data) => {
+            if (err) {
+                res.send("ERROR");
+            }
+            else {
+                if (data == null) {
+                    res.send("Nothing found")
+                }
+                else {
+                    res.send(data)
+                }
+            }
+        })
 })
 
 router.post('/get_old_orders', async (req, res, next) => {

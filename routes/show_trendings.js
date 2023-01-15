@@ -14,8 +14,19 @@ var path = require('path');
 const { randomFillSync } = require('crypto');
 require('dotenv').config();
 
-const POSTS_PER_PAGE = 4;
+const POSTS_PER_PAGE = 6;
 
+//Comparer Function    
+function GetSortFeeds(prop) {
+    return function (a, b) {
+        if (a[prop] > b[prop]) {
+            return 1;
+        } else if (a[prop] < b[prop]) {
+            return -1;
+        }
+        return 0;
+    }
+}
 
 router.get("/get_feed", async (req, res, next) => {
 
@@ -35,17 +46,21 @@ router.get("/get_feed", async (req, res, next) => {
     else {
 
         var data_length = await FeedItems.countDocuments({})
+        var caughtup = false
 
         limit_val = page * POSTS_PER_PAGE
-        skip_val = (page - 1) * POSTS_PER_PAGE
+        // skip_val = Math.max(0, (page - 2) * POSTS_PER_PAGE)
+        skip_val = 0
 
-        if (page * POSTS_PER_PAGE > data_length) {
-            limit_val = (page * POSTS_PER_PAGE) % data_length + POSTS_PER_PAGE
-            skip_val = limit_val - POSTS_PER_PAGE
+        console.log(limit_val, skip_val)
+
+        if (limit_val >= data_length) {
+            var caughtup = true
         }
 
+
         // for now not adapting
-        var feed_items = await FeedItems.find({}).limit(limit_val).skip(skip_val)
+        var feed_items = await FeedItems.find({}).limit(limit_val).skip(skip_val).sort({ title: 1 })
 
         var sendable_feeds = []
 
@@ -82,9 +97,12 @@ router.get("/get_feed", async (req, res, next) => {
 
                     if (sendable_feeds.length == feed_items.length) {
 
+                        sendable_feeds = sendable_feeds.sort(GetSortFeeds("title"))
+
                         return res.json({
                             verdict: 1,
-                            response: sendable_feeds
+                            response: sendable_feeds,
+                            caughtup: caughtup
                         })
 
                     }
