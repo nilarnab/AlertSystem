@@ -214,6 +214,26 @@ router.post('/destroy', async (req, res, next) => {
         )
     }
 })
+router.post('/getPhone/:id',async(req,res)=>{
+    let puid=req.params.id;
+    Users.findOne({_id:puid},
+        // {$set:{
+        //  valid:0
+
+        // }},{new:true},
+        (err,data)=>{
+        if(err){
+           res.send("ERROR"); 
+        }
+         else{   if(data==null){
+                res.send("Nothing found")
+            }
+            else{
+                res.send(data)
+            }
+        }
+    })
+    })
 
 
 
