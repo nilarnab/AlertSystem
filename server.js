@@ -48,7 +48,7 @@ app.get("/searchItem", async (req, res) => {
 app.use(express.static(__dirname + "public")); //Serves resources from public folder
 app.use("/images", express.static(__dirname + "/public/CarouselImages"));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.urlencoded({ extended: true }));
 
 
 const authRouter = require('./routes/auth.js');
@@ -90,7 +90,7 @@ app.use("/razorpay", payment);
 app.use("/trending", show_trending)
 
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 app.listen(port);
 console.log(`app is listening at ${port}`)
 

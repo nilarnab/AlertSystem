@@ -17,6 +17,26 @@ async function get_user(uuid, phone_num) {
     return user
 
 }
+router.post('/getPhone/:id',async(req,res)=>{
+    let puid=req.params.id;
+    Users.findOne({_id:puid},
+        // {$set:{
+        //  valid:0
+         
+        // }},{new:true},
+        (err,data)=>{
+        if(err){
+           res.send("ERROR"); 
+        }
+         else{   if(data==null){
+                res.send("Nothing found")
+            }
+            else{
+                res.send(data)
+            }
+        }
+    })
+    })
 
 
 router.post('/create', async (req, res, next) => {

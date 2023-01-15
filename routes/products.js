@@ -36,6 +36,7 @@ router.get("/getAllProducts", async (req, res, next) => {
   }
 });
 
+
 router.get("/get_product", async (req, res, next) => {
 
   try {
@@ -143,6 +144,25 @@ router.get("/infiniteScroll/:page", async (req, res, next) => {
     });
   }
 });
+router.post('/get_individual/:prod_id',async(req,res)=>{
+  let puid=req.params.prod_id;
+  
+  Product.findById({_id:puid},
+      (err,data)=>{
+      if(err){
+         res.send("ERROR"); 
+      }
+       else{   if(data==null){
+              res.send("Nothing found")
+          }
+          else{
+              res.send(data)
+          }
+      }
+  })
+  
+  })
+
 
 router.get("/get_one_product", async (req, res, next) => {
 
