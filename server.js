@@ -90,7 +90,7 @@ app.use("/razorpay", payment);
 app.use("/trending", show_trending)
 
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3000;
 app.listen(port);
 console.log(`app is listening at ${port}`)
 
