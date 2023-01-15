@@ -54,7 +54,7 @@ app.use(bodyParser.json());
 const authRouter = require('./routes/auth.js');
 const streamRouter = require('./routes/stream.js');
 const phoneVerfiyRouter = require('./routes/phoneVerify');
-const PushNotification =require('./routes/push_notification')
+const PushNotification = require('./routes/push_notification')
 const handleCartOps = require('./routes/handleCartOps');
 const productRouter = require("./routes/products.js");
 const searchRouter = require("./routes/search.js");
@@ -67,6 +67,7 @@ const ordeRouter = require('./routes/order_manage')
 const activityRouter = require('./routes/activity')
 const payment = require('./routes/payment_handler');
 const wishlist_handle = require('./routes/wishlist_handler')
+const show_trending = require('./routes/show_trendings')
 
 
 
@@ -74,12 +75,11 @@ app.use("/activity", activityRouter)
 app.use("/carousel", carouselRouter)
 app.use("/categoryDefine", categoryDefine)
 app.use("/auth", authRouter)
-app.use("/pushnot",PushNotification)
+app.use("/pushnot", PushNotification)
 app.use('/stream', streamRouter)
 app.use("/phoneVerify", phoneVerfiyRouter)
 app.use("/handleCartOps", handleCartOps)
 app.use("/products", productRouter);
-
 app.use("/wishlist", wishlist_handle);
 app.use("/search", searchRouter);
 app.use("/sessionManage", sessionRouter)
@@ -87,6 +87,7 @@ app.use("/userInfo", userInfoRouter)
 app.use("/monitor", monitorRouter)
 app.use("/orderManage", ordeRouter)
 app.use("/razorpay", payment);
+app.use("/trending", show_trending)
 
 
 const port = process.env.PORT || 4000;

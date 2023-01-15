@@ -371,6 +371,7 @@ router.post('/get_orders', async (req, res, next) => {
 
     })
 })
+
 router.post('/updateStage/:user_id/:order_id/:stage/:valid',async(req,res)=>{
   let uid=req.params.user_id;
   let puid=req.params.order_id;
@@ -391,12 +392,14 @@ router.post('/updateStage/:user_id/:order_id/:stage/:valid',async(req,res)=>{
             return res.send("Nothing found")
         }
         else{
-            console.log("ye mila data");
+            console.log(" data recived");
             console.log(data.stage)
             return res.status(200).json(data);
         }
     }
 })
+
+
 })
 router.post('/getstatus',async(req,res)=>{
     try {
