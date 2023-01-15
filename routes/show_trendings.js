@@ -14,7 +14,7 @@ var path = require('path');
 const { randomFillSync } = require('crypto');
 require('dotenv').config();
 
-const POSTS_PER_PAGE = 6;
+const POSTS_PER_PAGE = 4;
 
 //Comparer Function    
 function GetSortFeeds(prop) {
