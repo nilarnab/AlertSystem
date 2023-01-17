@@ -14,7 +14,7 @@ var path = require('path');
 const { randomFillSync } = require('crypto');
 require('dotenv').config();
 
-const POSTS_PER_PAGE = 4;
+const POSTS_PER_PAGE = 3;
 
 //Comparer Function    
 function GetSortFeeds(prop) {
@@ -84,6 +84,8 @@ router.get("/get_feed", async (req, res, next) => {
                 sendable_products.push(sendable_product)
 
                 if (sendable_products.length == products.length) {
+
+                    sendable_products = sendable_products.sort(GetSortFeeds('name'))
 
                     sendable_feed["title"] = feed_item.title
                     sendable_feed["description1"] = feed_item.description1

@@ -6,7 +6,7 @@ const bcrypt = require("bcryptjs");
 const router = express.Router();
 const Users = require('../models/Users')
 const Otps = require('../models/Otps')
-const Product=require('../models/Product')
+const Product = require('../models/Product')
 const Carts = require('../models/Carts')
 const Products = require('../models/Product')
 const Orders = require('../models/Orders')
@@ -71,6 +71,9 @@ router.post("/place_by_cart", async (req, res, next) => {
     /*
     Accepts parameters
     user_id: (str)
+    name: (str)
+    phone: (str)
+    email: (str)
     lat: (float)
     long: (float)
     loc1: (str)
@@ -86,6 +89,9 @@ router.post("/place_by_cart", async (req, res, next) => {
 
     // initialization
     var user_id = req.query.user_id
+    var name = req.query.name
+    var phone = req.query.phone
+    var email = req.query.email
     var lat = req.query.lat
     var long = req.query.long
     var loc1 = req.query.loc1
@@ -120,6 +126,9 @@ router.post("/place_by_cart", async (req, res, next) => {
     var response = await OrderSets.insertMany({
         order_id: order_id,
         user_id: user_id,
+        name: name,
+        phone: phone,
+        email: email,
         timestamp: Date.now(),
         location: {
             type: 'Point',
@@ -170,32 +179,36 @@ router.post("/place_by_cart", async (req, res, next) => {
 
 
 })
-router.post('/getqnt/:order_id',async(req,res)=>{
-    let puid=req.params.order_id;
-    Orders.findOne({order_id:puid},
+router.post('/getqnt/:order_id', async (req, res) => {
+    let puid = req.params.order_id;
+    Orders.findOne({ order_id: puid },
         // {$set:{
         //  valid:0
-         
+
         // }},{new:true},
-        (err,data)=>{
-        if(err){
-           res.send("ERROR"); 
-        }
-         else{   if(data==null){
-                res.send("Nothing found")
+        (err, data) => {
+            if (err) {
+                res.send("ERROR");
             }
-            else{
-                res.send(data)
+            else {
+                if (data == null) {
+                    res.send("Nothing found")
+                }
+                else {
+                    res.send(data)
+                }
             }
-        }
-    })
-    })
+        })
+})
 
 
 router.post("/place_by_item", async (req, res, next) => {
     /*
     Accepts parameters
     user_id: (str)
+    name: (str)
+    phone: (str)
+    email: (str)
     prod_id: (str)
     lat: (float)
     long: (float)
@@ -212,6 +225,9 @@ router.post("/place_by_item", async (req, res, next) => {
 
     // initialization
     var user_id = req.query.user_id
+    var name = req.query.name
+    var phone = req.query.phone
+    var email = req.query.email
     var prod_id = req.query.prod_id
     var lat = req.query.lat
     var long = req.query.long
@@ -246,6 +262,9 @@ router.post("/place_by_item", async (req, res, next) => {
     // make a new order Set
     var response = await OrderSets.insertMany({
         order_id: order_id,
+        name: name,
+        phone: phone,
+        email: email,
         user_id: user_id,
         timestamp: Date.now(),
         location: {
@@ -372,36 +391,39 @@ router.post('/get_orders', async (req, res, next) => {
     })
 })
 
-router.post('/updateStage/:user_id/:order_id/:stage/:valid',async(req,res)=>{
-  let uid=req.params.user_id;
-  let puid=req.params.order_id;
-  let updatestage=req.params.stage;
-  let updatevalid=req.params.valid;
-  console.log(updatestage);
-  console.log(updatevalid)
- OrderSets.findOneAndUpdate({user_id:uid,order_id:puid},
-    {$set:{
-     valid:updatevalid,
-     stage:updatestage
-    }},{new:true},
-    (err,data)=>{
-    if(err){
-       res.send("ERROR"); 
-    }
-     else{   if(data==null){
-            return res.send("Nothing found")
-        }
-        else{
-            console.log(" data recived");
-            console.log(data.stage)
-            return res.status(200).json(data);
-        }
-    }
-})
+router.post('/updateStage/:user_id/:order_id/:stage/:valid', async (req, res) => {
+    let uid = req.params.user_id;
+    let puid = req.params.order_id;
+    let updatestage = req.params.stage;
+    let updatevalid = req.params.valid;
+    console.log(updatestage);
+    console.log(updatevalid)
+    OrderSets.findOneAndUpdate({ user_id: uid, order_id: puid },
+        {
+            $set: {
+                valid: updatevalid,
+                stage: updatestage
+            }
+        }, { new: true },
+        (err, data) => {
+            if (err) {
+                res.send("ERROR");
+            }
+            else {
+                if (data == null) {
+                    return res.send("Nothing found")
+                }
+                else {
+                    console.log(" data recived");
+                    console.log(data.stage)
+                    return res.status(200).json(data);
+                }
+            }
+        })
 
 
 })
-router.post('/getstatus',async(req,res)=>{
+router.post('/getstatus', async (req, res) => {
     try {
         const list = await OrderSets.find()
         res.status(200).json(list);
@@ -410,48 +432,50 @@ router.post('/getstatus',async(req,res)=>{
         res.status(500).json({ message: 'Recovery failed!' });
     }
 })
-router.post('/getstatus/:order_id',async(req,res)=>{
-    let puid=req.params.order_id;
-    
-    OrderSets.findOne({order_id:puid},
+router.post('/getstatus/:order_id', async (req, res) => {
+    let puid = req.params.order_id;
+
+    OrderSets.findOne({ order_id: puid },
         // {$set:{
         //  valid:0
-         
+
         // }},{new:true},
-        (err,data)=>{
-        if(err){
-           res.send("ERROR"); 
-        }
-         else{   if(data==null){
-                res.send("Nothing found")
+        (err, data) => {
+            if (err) {
+                res.send("ERROR");
             }
-            else{
-                res.send(data)
+            else {
+                if (data == null) {
+                    res.send("Nothing found")
+                }
+                else {
+                    res.send(data)
+                }
             }
-        }
-    })
-    })
-router.post('/getorders/:order_id',async(req,res)=>{
-    let puid=req.params.order_id;
-    
-    Orders.find({order_id:puid},
+        })
+})
+router.post('/getorders/:order_id', async (req, res) => {
+    let puid = req.params.order_id;
+
+    Orders.find({ order_id: puid },
         // {$set:{
         //  valid:0
-         
+
         // }},{new:true},
-        (err,data)=>{
-        if(err){
-           res.send("ERROR"); 
-        }
-         else{   if(data==null){
-                res.send("Nothing found")
+        (err, data) => {
+            if (err) {
+                res.send("ERROR");
             }
-            else{
-                res.send(data)
+            else {
+                if (data == null) {
+                    res.send("Nothing found")
+                }
+                else {
+                    res.send(data)
+                }
             }
-        }
-    })
-    })
+        })
+})
 //    await OrderSets.findOne({order_id:puid},
 //     (err,data)=>{
 //         if(err){
@@ -466,35 +490,35 @@ router.post('/getorders/:order_id',async(req,res)=>{
 //         }
 //     })
 // })
-    //     (err,data)=>{
-    //         if(err){
-    //            res.send("ERROR"); 
-    //         }
-    //          else{   if(data==null){
-    //                 res.send("Nothing found")
-    //             }
-    //             else{
-    //                 res.send(data)
-    //             }
-    //         }
-        
-            // if (puid!= null) {
-            //     var response = await OrderSets.findOne({order_id:puid,
-                    
-            //     })
-            //     // console.log("Cancellation complete")
-            //     return response.json()
-        
-            // }
-            // else {
-            //     return response.json({
-            //         verdict: 0,
-            //         message: "Invalid parameters"
-            //     })
-            // }
-    
-       
-        
+//     (err,data)=>{
+//         if(err){
+//            res.send("ERROR"); 
+//         }
+//          else{   if(data==null){
+//                 res.send("Nothing found")
+//             }
+//             else{
+//                 res.send(data)
+//             }
+//         }
+
+// if (puid!= null) {
+//     var response = await OrderSets.findOne({order_id:puid,
+
+//     })
+//     // console.log("Cancellation complete")
+//     return response.json()
+
+// }
+// else {
+//     return response.json({
+//         verdict: 0,
+//         message: "Invalid parameters"
+//     })
+// }
+
+
+
 
 
 
