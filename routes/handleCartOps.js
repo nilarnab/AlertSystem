@@ -36,31 +36,33 @@ router.post("/show_items", async (req, res, next) => {
             })
         }
 
-        response["cart_items"] = null
-
-        var cart_items_sendable = []
-
-        cart_items.forEach(async (data, i) => {
+        response["cart_items"] = []
+        for (i = 0; i < cart_items.length; i++) {
             var product = await Products.findById(cart_items[i]["prod_id"])
 
             var prod_obj = {}
             prod_obj["product"] = product
             prod_obj["qnt"] = cart_items[i].qnt
             prod_obj["cart_id"] = cart_items[i]._id
+            response["cart_items"].push(prod_obj)
 
-            cart_items_sendable.push(prod_obj)
-
-            if (cart_items_sendable.length == cart_items.length) {
-
-                response["cart_items"] = cart_items_sendable
+            if (i == cart_items.length - 1) {
 
                 return res.json({
                     verdict: 1,
                     response
                 })
-            }
 
-        })
+
+            }
+        }
+
+        // cart_items.forEach(async (data, i) => {
+        //     cart_items[i]["product"] = await Product.findById(req.query.user_id)
+        // })
+
+
+
 
     }
     else {
@@ -170,13 +172,15 @@ router.post("/insert", async (req, res, next) => {
         new_cart.qnt = req.query.qnt
 
         var response = await new_cart.save()
+        var response = await new_cart.save()
         try {
             await (new Activity({ action: "addedToCart", productID: prod_id, timestamp: Date.now(), userID: user_id })).save();
         }
         catch (err) {
-            // console.log(err);
-            res.sendStatus(500);
+            console.log(err);
+            // res.sendStatus(500);
         }
+
         return res.json({
             verdict: 1,
             message: "Success in insertion",
@@ -203,12 +207,11 @@ router.post("/alter", async (req, res, next) => {
     changes the qnt value of a cart item
     
     */
-    // console.log("request to alter quantity ", req.query);
-    if (req.query.cart_id && req.query.qnt_new !== undefined) {
 
-        // console.log(req.query, " all fine")
-        var cart_ids = await Carts.find({ _id: req.query.cart_id, valid: 1 })
+    if (req.query.cart_id && req.query.qnt_new!==undefined && req.query.prod_id) {
 
+
+        var cart_ids = await Carts.findOne({ _id: req.query.cart_id, valid: 1 })
         try {
             if (cart_ids.length == 0) {
                 return res.send({
@@ -219,16 +222,42 @@ router.post("/alter", async (req, res, next) => {
             }
         }
         catch (err) {
-            // console.log(err);
+            console.log(err);
         }
 
-        var response = await Carts.findByIdAndUpdate(req.query.cart_id, { qnt: req.query.qnt_new })
+        try{
+            //check if new quantity becomes 0
+            if(req.query.qnt_new==0){
 
-        return res.json({
-            verdict: 1,
-            message: "Success in changing quantity",
-            data: response
-        })
+                var response = await Carts.findByIdAndUpdate(req.query.cart_id,{$set:{qnt:0,valid:0}});
+            
+            //adding activity 
+            try {
+                await (new Activity({ action: "removedFromCart", productID: req.query.prod_id, timestamp: Date.now(), userID: cart_ids.user_id })).save();
+            }
+            catch (err) {
+                console.log(err);
+                // res.sendStatus(500);
+            }
+        }
+            else{
+            response = await Carts.findByIdAndUpdate(req.query.cart_id, { qnt: req.query.qnt_new });
+            }
+            return res.json({
+                verdict: 1,
+                message: "Success in changing quantity",
+                data: response
+            })
+        }
+        catch(err){
+            console.log(err);
+            return res.json({
+                verdict: 0,
+                message: "error in changing quantity",
+                data: null
+            })
+            
+        }
     }
     else {
         return res.json({
