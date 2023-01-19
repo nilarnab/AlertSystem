@@ -455,67 +455,28 @@ router.post('/getorders/:order_id', async (req, res) => {
             }
         })
 })
-//    await OrderSets.findOne({order_id:puid},
-//     (err,data)=>{
-//         if(err){
-//            res.send("ERROR"); 
-//         }
-//          else{   if(data==null){
-//                 res.send("Nothing found")
-//             }
-//             else{
-//                 res.send(data)
-//             }
-//         }
-//     })
-// })
-//     (err,data)=>{
-//         if(err){
-//            res.send("ERROR"); 
-//         }
-//          else{   if(data==null){
-//                 res.send("Nothing found")
-//             }
-//             else{
-//                 res.send(data)
-//             }
-//         }
 
-// if (puid!= null) {
-//     var response = await OrderSets.findOne({order_id:puid,
 
-//     })
-//     // console.log("Cancellation complete")
-//     return response.json()
+   router.post('/getqnt/:order_id',async(req,res)=>{
+    let puid=req.params.order_id;
+    Orders.findOne({order_id:puid},
+        // {$set:{
+        //  valid:0
 
-// }
-// else {
-//     return response.json({
-//         verdict: 0,
-//         message: "Invalid parameters"
-//     })
-// }
-
-//    router.post('/getqnt/:order_id',async(req,res)=>{
-//     let puid=req.params.order_id;
-//     Orders.findOne({order_id:puid},
-//         // {$set:{
-//         //  valid:0
-
-//         // }},{new:true},
-//         (err,data)=>{
-//         if(err){
-//            res.send("ERROR"); 
-//         }
-//          else{   if(data==null){
-//                 res.send("Nothing found")
-//             }
-//             else{
-//                 res.send(data)
-//             }
-//         }
-//     })
-//     })    
+        // }},{new:true},
+        (err,data)=>{
+        if(err){
+           res.send("ERROR"); 
+        }
+         else{   if(data==null){
+                res.send("Nothing found")
+            }
+            else{
+                res.send(data)
+            }
+        }
+    })
+    })    
 
 
 
