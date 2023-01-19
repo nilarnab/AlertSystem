@@ -15,20 +15,20 @@ const { send } = require('process');
 
 const { MeiliSearch } = require('meilisearch');
 const Product = require('../models/Product');
-// var client;
-// try {
-//  client = new MeiliSearch({ host: 'http://localhost:7700',apiKey: 'aajmereyaarkishaadihai' })
-//  client.index('products').addDocuments({})
-//  .then((res) => console.log(res));
-// }
-// catch(err){
-//     console.log(err);
-// }
+var client;
+try {
+    client = new MeiliSearch({ host: 'http://localhost:7700', apiKey: 'aajmereyaarkishaadihai' })
+    client.index('products').addDocuments({})
+        .then((res) => console.log(res));
+}
+catch (err) {
+    console.log(err);
+}
 
 router.get("/query", async (req, res) => {
     const q = req.query.query;
     try {
-        // client.index('products').search(q).then((result) => res.send({'verdict': 1,'data': result.hits,}));
+        client.index('products').search(q).then((result) => res.send({ 'verdict': 1, 'data': result.hits, }));
         return res.json(
             []
         )
@@ -51,17 +51,17 @@ router.post('/add', async (req, res, next) => {
     var prod_id = req.body._id.$oid
     var timestamp = Date.now()
 
-    // req.body._id = prod_id
+    req.body._id = prod_id
 
-    // delete req.body._id
+    delete req.body._id
 
     console.log(req.body)
 
     try {
-        // //     client.index('products').addDocuments(req.body)
-        // //     .then((res) => console.log(res));
-        // //    console.log("success in insertion in open search")
-        //    console.log(prod_id);
+        client.index('products').addDocuments(req.body)
+            .then((res) => console.log(res));
+        console.log("success in insertion in open search")
+        console.log(prod_id);
 
         Searchables.insertMany(
             [{

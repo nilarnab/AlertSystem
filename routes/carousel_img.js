@@ -1,74 +1,45 @@
-
-const express = require('express');
-const path = require("path");
-const multer = require('multer');
-const Carousels = require('../models/Carousel');
-
-
-const uploadPath = path.join("public", 'Carousels.ImagePath');
+const express = require("express");
 const router = express.Router();
-const storageImage = multer.diskStorage({
-  destination: uploadPath,
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}--${file.originalname}`);
-  }
-});
-const upload = multer({ storage: storageImage }).single("img");
+const AdaptiveCarousel = require("../models/AdaptiveCarousel");
 
+router.get("/getCarousel", async (req, res, next) => {
+  try {
+    let carousel = await AdaptiveCarousel.find({});
+    return res.json({
+      verdict: 1,
+      data: carousel
 
-const addCarousel = async (req, res) => {
-
-  if (!req.file) {
-    return res.status(422).json({ message: 'Please add an image!' });
-  }
-
-  const filename = req.file != null ? req.file.filename : null;
-  const newcardImage = new Carousels({
-    title: req.body.title,
-    bodies: req.body.bodies,
-    img: filename
-  });
-  await newcardImage.save()
-    .then((result) => {
-      // console.log(result);
-      res.status(201).json({
-        message: "Image Posted",
-      });
     })
-    .catch((err) => {
-      // console.log(err);
-      res.status(500).json({
-        error: err,
-      });
-    });
-};
-
-router.route
-  ("/uploadCarousel")
-  .post(upload,
-    addCarousel
-  );
-router.route("/getAllImages").get(async (req, res, next) => {
-  // console.log("getting found");
-  try {
-    const data = await Carousels.find();
-    // console.log(data);
-    res.status(200).send(data);
-  } catch (error) {
-    // console.log("error", error);
-    res.status(500).json({ message: "Recovery failed!" });
-  }
-});
-
-router.get("/getCarousels", async (req, res) => {
-  try {
-    const data = await Carousels.find({});
-    res.send(data);
   }
   catch (err) {
-    // console.log(err);
-    res.sendStatus(500);
+    return res.json({
+      verdict: 0,
+      data: err
+    })
   }
 })
 
-module.exports = router;
+
+router.post("/addCarousel", async (req, res, next) => {
+  try {
+    await AdaptiveCarousel.insertMany(
+      {
+        title: 'watch the videos',
+        body: 'and then buy',
+        img: 'https://images.unsplash.com/photo-1616161610000-1b1b1b1b1b1b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+      }
+    )
+    return res.json({
+      verdict: 1,
+      data: carousel
+    })
+  }
+  catch (err) {
+    return res.json({
+      verdict: 0,
+      data: err
+    })
+  }
+})
+
+module.exports = router
