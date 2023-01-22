@@ -29,9 +29,6 @@ router.get("/query", async (req, res) => {
     const q = req.query.query;
     try {
         client.index('products').search(q).then((result) => res.send({ 'verdict': 1, 'data': result.hits, }));
-        return res.json(
-            []
-        )
     }
 
     catch (err) {
