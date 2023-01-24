@@ -8,7 +8,7 @@ const ResourceSchema = new mongoose.Schema({
         return 'https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-collection-1_large.png?format=webp&v=1530129113'
     }
     else if(this.type=="video"){
-        return 'http://159.223.90.95:5000/video/id_video_1/_manifest.mpd'
+        return 'http://159.223.90.95:5000/video/id_video_4/_manifest.mpd'
     }
     else{
         return ''

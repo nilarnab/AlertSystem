@@ -8,12 +8,37 @@ const Activity = require("../models/Activity")
 require('dotenv').config();
 
 
-router.post("/insert-item", async (req, res) => {
-    if (req.query.user_id && req.query.prod_id ) {
-        try{
 
-        var user_id = req.query.user_id
-        var prod_id = req.query.prod_id
+router.post("/insert-item", async (req, res) => {
+  if (req.query.user_id && req.query.prod_id ) {
+    var user_id = req.query.user_id
+      var prod_id = req.query.prod_id
+    var wish_id = await Wishlists.find({ user_id: user_id, prod_id: prod_id, valid: 1 })
+
+    if (wish_id.length > 0) {
+
+        var response = await Wishlists.findOneAndUpdate({
+            user_id: user_id,
+            prod_id: prod_id
+        })
+
+
+        return res.json({
+            verdict: 1,
+            message: "Success in changing",
+            response,
+        })
+
+
+    }
+
+
+
+     
+
+      
+     
+        try{
         var new_wishlist = new Wishlists()
         new_wishlist.user_id = user_id
         new_wishlist.prod_id = prod_id
@@ -27,6 +52,7 @@ router.post("/insert-item", async (req, res) => {
             console.log(err);
             res.sendStatus(500);
         }
+        console.log("added successfully");
         return res.status(200).json(response)
        
     }
@@ -94,21 +120,33 @@ router.get('/getstatus/:user_id',async(req,res)=>{
    
     })
     router.get('/get_ind/:user_id/:prod_id',async(req,res)=>{
-        let uid=req.params.user_id;
-        let puid=req.params.prod_id;
-        try {
-        
-            var product = await Wishlists.findOne({user_id:uid,prod_id:puid});
-            if (!product) {
-              return res.status(404).json({ msg: "Error occured" });
-            }
-        
-            return res.status(200).json(product);
-          } catch (error) {
-            return res.status(500).json(error);
-          }
-        
-       
-        })
+      let uid=req.params.user_id;
+      let puid=req.params.prod_id;
+      console.log("get wish list item")
+      console.log(uid);
+      console.log(puid)
+    
 
+      try {
+      
+          var product = await Wishlists.findOne({user_id:uid,prod_id:puid});
+          console.log(product)
+          if (product==null) {
+            console.log("error")         
+            return res.status(404).json({msg:"product doesnt found"});
+          // return res.send();
+          }
+          else{
+          
+            console.log("pro found")
+            return res.status(200).json(product);
+         
+          }
+        } catch (error) {
+          return res.status(500).json(error);
+        }
+      
+     
+      })
+   
 module.exports = router

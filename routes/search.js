@@ -25,14 +25,13 @@ const Product = require('../models/Product');
 //     console.log(err);
 // }
 
+// ======================= to be uncommented when using meilisearch =======================
 // router.get("/query", async (req, res) => {
-//     const q = req.query.query;
+//     const q = req.query.query;5
 //     try {
 //         client.index('products').search(q).then((result) => res.send({ 'verdict': 1, 'data': result.hits, }));
-//         return res.json(
-//             []
-//         )
 //     }
+// =====================================================================
 
 //     catch (err) {
 //         console.log(err);
