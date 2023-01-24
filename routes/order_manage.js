@@ -102,7 +102,7 @@ router.post("/place_by_cart", async (req, res, next) => {
     // console.log(user_id, lat, long, loc1, loc2, pin, city)
 
 
-    if (user_id == null || lat == null || long == null || loc1 == null || loc2 == null || pin == null || city == null) {
+    if (user_id == null || name == null || phone == null || email == null || lat == null || long == null || loc1 == null || loc2 == null || pin == null || city == null) {
         return res.json({
             verdict: 0,
             message: "Missing parameters"
@@ -218,7 +218,7 @@ router.post("/place_by_item", async (req, res, next) => {
     console.log(user_id, prod_id, lat, long, loc1, loc2, pin, city)
 
 
-    if (user_id == null || prod_id == null || lat == null || long == null || loc1 == null || loc2 == null || pin == null || city == null) {
+    if (user_id == null || name == null || phone == null || email == null || prod_id == null || lat == null || long == null || loc1 == null || loc2 == null || pin == null || city == null) {
         return res.json({
             verdict: 0,
             message: "Missing parameters"
@@ -457,26 +457,27 @@ router.post('/getorders/:order_id', async (req, res) => {
 })
 
 
-   router.post('/getqnt/:order_id',async(req,res)=>{
-    let puid=req.params.order_id;
-    Orders.findOne({order_id:puid},
+router.post('/getqnt/:order_id', async (req, res) => {
+    let puid = req.params.order_id;
+    Orders.findOne({ order_id: puid },
         // {$set:{
         //  valid:0
 
         // }},{new:true},
-        (err,data)=>{
-        if(err){
-           res.send("ERROR"); 
-        }
-         else{   if(data==null){
-                res.send("Nothing found")
+        (err, data) => {
+            if (err) {
+                res.send("ERROR");
             }
-            else{
-                res.send(data)
+            else {
+                if (data == null) {
+                    res.send("Nothing found")
+                }
+                else {
+                    res.send(data)
+                }
             }
-        }
-    })
-    })    
+        })
+})
 
 
 

@@ -15,6 +15,7 @@ const { randomFillSync } = require('crypto');
 require('dotenv').config();
 
 const POSTS_PER_PAGE = 3;
+const BATCH_SIZE = 10;
 
 //Comparer Function    
 function GetSortFeeds(prop) {
@@ -35,6 +36,8 @@ router.get("/get_feed", async (req, res, next) => {
     var user_id = req.query.user_id
     var page = req.query.page
 
+    var scroll_to_top = false
+
     // does not user if for now, but later it will be used
 
     if (user_id == null || page == null) {
@@ -52,12 +55,22 @@ router.get("/get_feed", async (req, res, next) => {
         // skip_val = Math.max(0, (page - 2) * POSTS_PER_PAGE)
         skip_val = 0
 
-        console.log(limit_val, skip_val)
-
         if (limit_val >= data_length) {
             var caughtup = true
         }
 
+        // here we are taking feed items by batch
+        var batch_count = Math.floor(limit_val / BATCH_SIZE)
+        skip_val = batch_count * BATCH_SIZE
+
+        var prev_batch_count = Math.floor((limit_val - POSTS_PER_PAGE) / BATCH_SIZE)
+
+        if (prev_batch_count != batch_count) {
+            console.log("scrolling up")
+            scroll_to_top = true
+        }
+
+        console.log(limit_val, skip_val, 'requested page', page)
 
         // for now not adapting
         var feed_items = await FeedItems.find({}).limit(limit_val).skip(skip_val).sort({ title: 1 })
@@ -104,7 +117,8 @@ router.get("/get_feed", async (req, res, next) => {
                         return res.json({
                             verdict: 1,
                             response: sendable_feeds,
-                            caughtup: caughtup
+                            caughtup: caughtup,
+                            scroll_to_top: scroll_to_top
                         })
 
                     }
