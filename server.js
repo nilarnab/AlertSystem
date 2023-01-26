@@ -7,6 +7,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
+
 const mongo = require("mongoose");
 mongo.connect(process.env.DATABASE_URL, { usenewUrlParser: true });
 const db = mongo.connection;
@@ -88,7 +89,6 @@ app.use("/monitor", monitorRouter)
 app.use("/orderManage", ordeRouter)
 app.use("/razorpay", payment);
 app.use("/trending", show_trending)
-
 
 const port = process.env.PORT || 3000;
 app.listen(port);
