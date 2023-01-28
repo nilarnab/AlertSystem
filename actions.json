@@ -1,0 +1,15 @@
+{
+    "SERVER_DOWN": {
+        "alert_code": "SERVER_DOWN",
+        "alert_level": "CRITICAL",
+        "alert_subject": "SERVER DOWN",
+        "alert_body": "The server is down and needs to be restarted.",
+        "target_url": "http://sdf.com/",
+        "alert_ok_message": "SERVER OK",
+        "alert_not_ok_message": "SERVER DOWN",
+        "snooze_time_min": "30",
+        "concerned": [
+            "admin"
+        ]
+    }
+}
